@@ -1,8 +1,7 @@
 import { Calendar1 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { DATE_MESSAGES } from "../../../constants/dateMessages";
 import { TIMEZONE_OPTIONS } from "../../../constants/timezones";
-import type { FetchPayload } from "../../../data/types";
+import { type DateMessage, type FetchPayload } from '../../../data';
 import { useDateRangePicker } from "../../hooks";
 import { formatDate, formatRangeDisplay, getGMTOffset } from "../../utils";
 import DateRangePickerPanel from "./DateRangePickerPanel";
@@ -12,6 +11,7 @@ interface DateRangePickerProps {
   onConfirm?: (payload: FetchPayload) => void;
   pastDayLimit?: number;
   rangeLimit?: number;
+  dateConfig?: Record<string, DateMessage>
 }
 
 const DEFAULT_RANGE_LIMIT = 10;
@@ -21,6 +21,7 @@ const DateRangePicker = ({
   onConfirm,
   pastDayLimit,
   rangeLimit = DEFAULT_RANGE_LIMIT,
+  dateConfig
 }: DateRangePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -130,7 +131,7 @@ const DateRangePicker = ({
               selectedRange={selectedRange}
               hoverDate={hoverDate}
               isSelecting={isSelecting}
-              dateMessages={DATE_MESSAGES}
+              dateConfig={dateConfig}
               onDateClick={handleDateClick}
               onDateHover={handleDateHover}
               onPrev={goToPrevMonth}

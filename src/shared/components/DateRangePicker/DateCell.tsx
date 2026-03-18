@@ -58,12 +58,18 @@ const DateCell = ({
     .join(" ");
 
   const showTooltip = !!message || isHoverRangeExceeded;
+  console.log("🚀 ~ DateCell ~ isHoverRangeExceeded:", isHoverRangeExceeded)
+
+  const handleCellClick = (date: Dayjs) => {
+    console.log(`--handleCellClicked`, isHoverRangeExceeded, date)
+    if(!isDisabled) onClick(date)
+  }
 
   return (
     <div className={bandClass}>
       <div
         className="group relative"
-        onClick={() => !isDisabled && onClick(date)}
+        onClick={() => handleCellClick(date)}
         onMouseEnter={() => onMouseEnter(date)}
       >
         <div className={circleClass}>

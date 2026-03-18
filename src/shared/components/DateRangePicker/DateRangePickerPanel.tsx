@@ -9,7 +9,7 @@ interface CalendarPanelProps {
   selectedRange: DateRange;
   hoverDate: Dayjs | null;
   isSelecting: boolean;
-  dateMessages: Record<string, DateMessage>;
+  dateConfig?: Record<string, DateMessage>;
   onDateClick: (date: Dayjs) => void;
   onDateHover: (date: Dayjs) => void;
   onPrev: () => void;
@@ -24,7 +24,7 @@ const DateRangePickerPanel = ({
   selectedRange,
   hoverDate,
   isSelecting,
-  dateMessages,
+  dateConfig,
   onDateClick,
   onDateHover,
   onPrev,
@@ -45,7 +45,7 @@ const DateRangePickerPanel = ({
         selectedRange={selectedRange}
         hoverDate={hoverDate}
         isSelecting={isSelecting}
-        dateMessages={dateMessages}
+        dateConfig={dateConfig}
         onDateClick={onDateClick}
         onDateHover={onDateHover}
         pastDayLimit={pastDayLimit}

@@ -11,7 +11,7 @@ interface CalendarGridProps {
   selectedRange: DateRange
   hoverDate: Dayjs | null
   isSelecting: boolean
-  dateMessages: Record<string, DateMessage>
+  dateConfig?: Record<string, DateMessage>
   onDateClick: (date: Dayjs) => void
   onDateHover: (date: Dayjs) => void
   pastDayLimit?: number
@@ -23,7 +23,7 @@ const DateRangePickerGrid = ({
   selectedRange,
   hoverDate,
   isSelecting,
-  dateMessages,
+  dateConfig,
   onDateClick,
   onDateHover,
   pastDayLimit,
@@ -51,7 +51,7 @@ const DateRangePickerGrid = ({
     return days.map(date => {
       const dateKey = formatDate(date, 'YYYY-MM-DD') as string
 
-      const message = dateMessages?.[dateKey] ?? null
+      const message = dateConfig?.[dateKey] ?? null
       const isRangeStart = !!(startDate && date.isSame(startDate, 'day'))
       const isRangeEnd = !!(rangeEnd && date.isSame(rangeEnd, 'day') && !isSelecting)
       const inRange = isInRange(date, rangeStart, rangeEnd)
@@ -75,7 +75,7 @@ const DateRangePickerGrid = ({
         message,
       }
     })
-  }, [days, selectedRange, hoverDate, isSelecting, dateMessages, pastDayLimit, rangeLimit])
+  }, [days, selectedRange, hoverDate, isSelecting, dateConfig, pastDayLimit, rangeLimit])
 
   const handleClick = useCallback((date: Dayjs) => onDateClick(date), [onDateClick])
   const handleHover = useCallback((date: Dayjs) => onDateHover(date), [onDateHover])

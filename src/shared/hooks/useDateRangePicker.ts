@@ -1,7 +1,6 @@
 import dayjs, { type Dayjs } from "dayjs";
 import { useCallback, useState } from "react";
-import { DATE_MESSAGES } from "../../constants/dateMessages";
-import type { DateRange, FetchPayload } from "../../data/types";
+import type { DateMessage, DateRange, FetchPayload } from "../../data/types";
 import {
   daysDiff,
   formatForPayload,
@@ -14,6 +13,7 @@ const DEFAULT_TIMEZONE = "Asia/Singapore";
 interface UseDateRangePickerParams {
   pastDayLimit?: number;
   rangeLimit: number;
+  dateConfig?: Record<string, DateMessage>
 }
 
 const buildDefaultRange = (now: () => Dayjs): DateRange => {
@@ -23,7 +23,7 @@ const buildDefaultRange = (now: () => Dayjs): DateRange => {
   };
 };
 
-const useDateRangePicker = ({ pastDayLimit, rangeLimit }: UseDateRangePickerParams) => {
+const useDateRangePicker = ({ pastDayLimit, rangeLimit, dateConfig }: UseDateRangePickerParams) => {
   const [timezone, setTimezone] = useState(DEFAULT_TIMEZONE);
   const now = useCallback(() => dayjs.tz(undefined, timezone), [timezone]);
 
@@ -52,7 +52,7 @@ const useDateRangePicker = ({ pastDayLimit, rangeLimit }: UseDateRangePickerPara
   const handleDateClick = useCallback(
     (date: Dayjs) => {
       if (isPastRestricted(date, pastDayLimit) || isFutureDate(date)) return;
-      if (DATE_MESSAGES[date.format("YYYY-MM-DD")]?.disabled) return;
+      if (dateConfig?.[date.format("YYYY-MM-DD")]?.disabled) return;
 
       if (!isSelecting) {
         setSelectedRange({ startDate: date, endDate: null });
@@ -72,7 +72,7 @@ const useDateRangePicker = ({ pastDayLimit, rangeLimit }: UseDateRangePickerPara
       setIsSelecting(false);
       setHoverDate(null);
     },
-    [isSelecting, selectedRange.startDate, pastDayLimit, rangeLimit],
+    [isSelecting, selectedRange.startDate, pastDayLimit, rangeLimit, dateConfig],
   );
 
   const handleDateHover = useCallback(
