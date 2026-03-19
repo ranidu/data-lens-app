@@ -6,7 +6,8 @@ interface ColumnDef {
   field: string;
   styles?: Record<string, string>;
   className?: string;
-  renderCell?: (value: unknown) => React.ReactNode;
+  filter?: boolean;
+  sort?: boolean;
 }
 
 interface TableProps {
@@ -45,7 +46,7 @@ const Table = ({ columnDefs, rows, isLoading, error }: TableProps) => {
     setSortStates((prev) => {
       if (prev?.field !== field) return { field, direction: "asc" };
       if (prev.direction === "asc") return { ...prev, direction: "desc" };
-      return
+      return;
     });
   };
 
@@ -75,15 +76,11 @@ const Table = ({ columnDefs, rows, isLoading, error }: TableProps) => {
   );
 
   if (sortStates) {
-    const multiplier = sortStates.direction === "asc" ? 1 : -1;
     displayRows = [...displayRows].sort((a, b) => {
-      const aValue = a[sortStates.field] ?? "";
-      const bValue = b[sortStates.field] ?? "";
-      const cmp =
-        typeof aValue === "number" && typeof bValue === "number"
-          ? aValue - bValue
-          : String(aValue).localeCompare(String(bValue));
-      return cmp * multiplier;
+      const aValue = String(a[sortStates.field] ?? "");
+      const bValue = String(b[sortStates.field] ?? "");
+      const compare = aValue.localeCompare(bValue, undefined, { numeric: true });
+      return sortStates.direction === "asc" ? compare : -compare;
     });
   }
 
@@ -108,7 +105,7 @@ const Table = ({ columnDefs, rows, isLoading, error }: TableProps) => {
                       className="flex items-center gap-1 hover:text-blue-600 transition-colors cursor-pointer"
                     >
                       <span>{col.headerName}</span>
-                      {!sortEntry && (
+                      {!sortEntry && col.sort && (
                         <ChevronsUpDown size={14} className="text-gray-400" />
                       )}
                       {sortEntry && sortStates?.direction === "asc" && (
@@ -118,18 +115,20 @@ const Table = ({ columnDefs, rows, isLoading, error }: TableProps) => {
                         <ChevronDown size={14} className="text-blue-500" />
                       )}
                     </button>
-                    <button
-                      onClick={() =>
-                        setOpenSearch(isSearchOpen ? null : col.field)
-                      }
-                      className={`ml-1 transition-colors ${
-                        searchFilters[col.field]
-                          ? "text-blue-500"
-                          : "text-gray-400 hover:text-blue-500"
-                      }`}
-                    >
-                      <Search size={14} />
-                    </button>
+                    {col.filter && (
+                      <button
+                        onClick={() =>
+                          setOpenSearch(isSearchOpen ? null : col.field)
+                        }
+                        className={`ml-1 transition-colors cursor-pointer ${
+                          searchFilters[col.field]
+                            ? "text-blue-500"
+                            : "text-gray-400 hover:text-blue-500"
+                        }`}
+                      >
+                        <Search size={14} />
+                      </button>
+                    )}
                   </div>
 
                   {isSearchOpen && (
@@ -207,9 +206,7 @@ const Table = ({ columnDefs, rows, isLoading, error }: TableProps) => {
                     key={col.field}
                     className="px-4 py-3 text-sm text-gray-600"
                   >
-                    {col.renderCell
-                      ? col.renderCell(row[col.field])
-                      : String(row[col.field] ?? "")}
+                    {String(row[col.field] ?? "")}
                   </td>
                 ))}
               </tr>

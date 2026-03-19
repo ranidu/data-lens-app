@@ -1,7 +1,7 @@
 import { Calendar1 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { TIMEZONE_OPTIONS } from "../../../constants/timezones";
 import { type DateMessage, type FetchPayload } from '../../../data';
+import { TIMEZONE_OPTIONS } from "../../constants";
 import { useDateRangePicker } from "../../hooks";
 import { formatDate, formatRangeDisplay, getGMTOffset } from "../../utils";
 import DateRangePickerPanel from "./DateRangePickerPanel";
@@ -14,13 +14,11 @@ interface DateRangePickerProps {
   dateConfig?: Record<string, DateMessage>
 }
 
-const DEFAULT_RANGE_LIMIT = 10;
-
 const DateRangePicker = ({
   name,
   onConfirm,
   pastDayLimit,
-  rangeLimit = DEFAULT_RANGE_LIMIT,
+  rangeLimit,
   dateConfig
 }: DateRangePickerProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +113,7 @@ const DateRangePicker = ({
             <select
               value={timezone}
               onChange={(e) => setTimezone(e.target.value)}
-              className="text-xs w-[100%] text-gray-600 border border-gray-200 rounded px-2 py-1 outline-none focus:border-blue-400 bg-white"
+              className="px-1 py-2 text-xs w-[100%] text-gray-600 border border-gray-200 rounded px-2 py-1 outline-none focus:border-blue-400 bg-white"
             >
               {TIMEZONE_OPTIONS.map((tz) => (
                 <option key={tz.value} value={tz.value}>
@@ -151,12 +149,12 @@ const DateRangePicker = ({
             <div>
               <button
                 onClick={handleClear}
-                className="py-1.5 text-sm text-gray-600 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                className="px-4 py-1.5 text-sm text-gray-600 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
               >
-                Clear
+                Reset
               </button>
             </div>
-            <div className="flex w-full justify-end">
+            <div className="flex w-full justify-end gap-2">
               <button
                 onClick={handleCancel}
                 className="px-4 py-1.5 text-sm text-gray-600 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"

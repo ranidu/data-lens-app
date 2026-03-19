@@ -1,21 +1,23 @@
+import { TIMEZONES } from '../constants'
+
 export const TIMEZONE_TO_OFFSET: Record<string, string> = {
-  'Asia/Singapore':    '+0800',
-  'Asia/Kolkata':      '+0530',
-  'Asia/Dubai':        '+0400',
-  'Europe/Moscow':     '+0300',
-  'Europe/London':     '+0000',
-  'America/New_York':  '-0500',
-  'America/Los_Angeles': '-0800',
+  [TIMEZONES.ASIA_SINGAPORE]: '+0800',
+  [TIMEZONES.ASIA_COLOMBO]: '+0530',
+  [TIMEZONES.ASIA_DUBAI]: '+0400',
+  [TIMEZONES.EUROPE_MOSCOW]: '+0300',
+  [TIMEZONES.EUROPE_LONDON]: '+0000',
+  [TIMEZONES.AMERICA_NEW_YORK]: '-0500',
+  [TIMEZONES.AMERICA_LOS_ANGELES]: '-0800',
 }
 
 const TIMEZONE_TO_GMT_LABEL: Record<string, string> = {
-  'Asia/Singapore':    'GMT+8',
-  'Asia/Kolkata':      'GMT+5:30',
-  'Asia/Dubai':        'GMT+4',
-  'Europe/Moscow':     'GMT+3',
-  'Europe/London':     'GMT+0',
-  'America/New_York':  'GMT-5',
-  'America/Los_Angeles': 'GMT-8',
+  [TIMEZONES.ASIA_SINGAPORE]: 'GMT+8',
+  [TIMEZONES.ASIA_COLOMBO]: 'GMT+5:30',
+  [TIMEZONES.ASIA_DUBAI]: 'GMT+4',
+  [TIMEZONES.EUROPE_MOSCOW]: 'GMT+3',
+  [TIMEZONES.EUROPE_LONDON]: 'GMT+0',
+  [TIMEZONES.AMERICA_NEW_YORK]: 'GMT-5',
+  [TIMEZONES.AMERICA_LOS_ANGELES]: 'GMT-8',
 }
 
 export function getGMTOffset(timezone: string): string {

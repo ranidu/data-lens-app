@@ -2,8 +2,8 @@ import { USERS } from "../constants";
 import type { TableRow } from "../types";
 
 export interface GetUsersPayload {
-  startDate: string; //"2026-03-11 00:00:00 +0800"
-  endDate: string; //"2026-03-18 23:59:59 +0800"
+  startDate: string
+  endDate: string
 }
 
 export const getUsers = async (payload: GetUsersPayload): Promise<TableRow[]> => {

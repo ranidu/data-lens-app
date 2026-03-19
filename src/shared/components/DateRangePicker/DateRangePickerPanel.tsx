@@ -1,5 +1,5 @@
 import type { Dayjs } from "dayjs";
-import type { DateMessage, DateRange } from "../../../data/types";
+import type { DateMessage, DateRange } from "../../../data";
 import DateRangePickerGrid from "./DateRangePickerGrid";
 import DateRangePickerHeader from "./DateRangePickerHeader";
 
@@ -15,7 +15,7 @@ interface CalendarPanelProps {
   onPrev: () => void;
   onNext: () => void;
   pastDayLimit?: number;
-  rangeLimit: number;
+  rangeLimit?: number;
 }
 
 const DateRangePickerPanel = ({

@@ -1,6 +1,6 @@
 import type { Dayjs } from "dayjs";
 import { memo } from "react";
-import type { DateMessage } from "../../../data/types";
+import type { DateMessage } from "../../../data";
 
 interface DateCellProps {
   date: Dayjs;
@@ -15,6 +15,7 @@ interface DateCellProps {
   message: DateMessage | null;
   onClick: (date: Dayjs) => void;
   onMouseEnter: (date: Dayjs) => void;
+  rangeLimit?: number;
 }
 
 const DateCell = ({
@@ -30,6 +31,7 @@ const DateCell = ({
   message,
   onClick,
   onMouseEnter,
+  rangeLimit
 }: DateCellProps) => {
   const isOutsideMonth = !date.isSame(currentMonth, "month");
   const isSelected = isRangeStart || isRangeEnd;
@@ -58,10 +60,8 @@ const DateCell = ({
     .join(" ");
 
   const showTooltip = !!message || isHoverRangeExceeded;
-  console.log("🚀 ~ DateCell ~ isHoverRangeExceeded:", isHoverRangeExceeded)
 
   const handleCellClick = (date: Dayjs) => {
-    console.log(`--handleCellClicked`, isHoverRangeExceeded, date)
     if(!isDisabled) onClick(date)
   }
 
@@ -80,9 +80,9 @@ const DateCell = ({
         </div>
 
         {showTooltip && (
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-50 whitespace-nowrap pointer-events-none">
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-150 whitespace-nowrap pointer-events-none">
             <div className="bg-gray-800 text-white text-xs rounded px-2 py-1">
-              {isHoverRangeExceeded ? "Max 10 days" : message?.message}
+              {isHoverRangeExceeded ? `Maximum allowed date range is ${rangeLimit} days` : message?.message}
             </div>
           </div>
         )}

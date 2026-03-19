@@ -1,19 +1,20 @@
 import dayjs, { type Dayjs } from "dayjs";
 import { useCallback, useState } from "react";
-import type { DateMessage, DateRange, FetchPayload } from "../../data/types";
+import type { DateMessage, DateRange, FetchPayload } from "../../data";
 import {
   daysDiff,
+  formatDate,
   formatForPayload,
   isFutureDate,
   isPastRestricted,
-} from "../utils/dateUtils";
+} from "../utils";
 
 const DEFAULT_TIMEZONE = "Asia/Singapore";
 
 interface UseDateRangePickerParams {
   pastDayLimit?: number;
-  rangeLimit: number;
-  dateConfig?: Record<string, DateMessage>
+  rangeLimit?: number;
+  dateConfig?: Record<string, DateMessage>;
 }
 
 const buildDefaultRange = (now: () => Dayjs): DateRange => {
@@ -23,7 +24,11 @@ const buildDefaultRange = (now: () => Dayjs): DateRange => {
   };
 };
 
-const useDateRangePicker = ({ pastDayLimit, rangeLimit, dateConfig }: UseDateRangePickerParams) => {
+const useDateRangePicker = ({
+  pastDayLimit,
+  rangeLimit,
+  dateConfig,
+}: UseDateRangePickerParams) => {
   const [timezone, setTimezone] = useState(DEFAULT_TIMEZONE);
   const now = useCallback(() => dayjs.tz(undefined, timezone), [timezone]);
 
@@ -52,7 +57,8 @@ const useDateRangePicker = ({ pastDayLimit, rangeLimit, dateConfig }: UseDateRan
   const handleDateClick = useCallback(
     (date: Dayjs) => {
       if (isPastRestricted(date, pastDayLimit) || isFutureDate(date)) return;
-      if (dateConfig?.[date.format("YYYY-MM-DD")]?.disabled) return;
+      if (dateConfig?.[formatDate(date, "YYYY-MM-DD") as string]?.disabled)
+        return;
 
       if (!isSelecting) {
         setSelectedRange({ startDate: date, endDate: null });
@@ -60,19 +66,24 @@ const useDateRangePicker = ({ pastDayLimit, rangeLimit, dateConfig }: UseDateRan
         return;
       }
 
-      // Second click — determine ordered start/end
       const start = selectedRange.startDate!;
       const [rangeStart, rangeEnd] = date.isBefore(start, "day")
         ? [date, start]
         : [start, date];
 
-      if (daysDiff(rangeStart, rangeEnd) > rangeLimit) return;
+      if (rangeLimit && daysDiff(rangeStart, rangeEnd) > rangeLimit) return;
 
       setSelectedRange({ startDate: rangeStart, endDate: rangeEnd });
       setIsSelecting(false);
       setHoverDate(null);
     },
-    [isSelecting, selectedRange.startDate, pastDayLimit, rangeLimit, dateConfig],
+    [
+      isSelecting,
+      selectedRange.startDate,
+      pastDayLimit,
+      rangeLimit,
+      dateConfig,
+    ],
   );
 
   const handleDateHover = useCallback(
@@ -122,4 +133,4 @@ const useDateRangePicker = ({ pastDayLimit, rangeLimit, dateConfig }: UseDateRan
   };
 };
 
-export default useDateRangePicker
+export default useDateRangePicker;
