@@ -107,12 +107,13 @@ const useDateRangePicker = ({
     setIsSelecting(false);
     setHoverDate(null);
     setActiveInput(null);
+    setConfirmedRange(buildDefaultRange(now));
     return {
       startDate: formatForPayload(selectedRange.startDate, timezone, false),
       endDate: formatForPayload(selectedRange.endDate, timezone, true),
       timezone,
     };
-  }, [selectedRange, timezone]);
+  }, [selectedRange, timezone, now]);
 
   return {
     now,
